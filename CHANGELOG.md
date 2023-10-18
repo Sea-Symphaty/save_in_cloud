@@ -1,3 +1,7 @@
+## 0.0.3
+
+* README rewritten
+
 ## 0.0.2
 
 * Created example, documentation in google_drive_write and google_drive_read
