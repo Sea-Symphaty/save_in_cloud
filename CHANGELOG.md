@@ -1,3 +1,7 @@
+## 0.0.4
+
+* Added LICENSE
+
 ## 0.0.3
 
 * README rewritten
