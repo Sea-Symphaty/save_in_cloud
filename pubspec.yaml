@@ -11,10 +11,10 @@ dependencies:
   dartdoc: ^6.3.0
   flutter:
     sdk: flutter
-  google_sign_in: any
-  googleapis: any
-  http: any
-  path_provider: any
+  google_sign_in: ^6.1.5
+  googleapis: ^11.4.0
+  http: ^1.1.0
+  path_provider: ^2.1.1
 
 dev_dependencies:
   flutter_test:
