@@ -28,25 +28,23 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   Map content = {
-    "Map" : {},
-    "String" : "string",
-    "int" : 0,
-    "bool" : true,
-    "List" : []
+    "Map": {},
+    "String": "string",
+    "int": 0,
+    "bool": true,
+    "List": []
   };
   Map newContent = {
-    "Map" : {},
-    "String" : "string",
-    "int" : 0,
-    "bool" : true,
-    "List" : [
-      "updated"
-    ]
+    "Map": {},
+    "String": "string",
+    "int": 0,
+    "bool": true,
+    "List": ["updated"]
   };
   String filename = "file";
   String folderName = "Folder";
   String description = "This is a description of the folder";
-  String apiKey = "YOUR_API_KEY";// todo: insert the API key here
+  String apiKey = "YOUR_API_KEY"; // todo: insert the API key here
 
   /// Sign in Google with scope: https://www.googleapis.com/auth/drive.file
   /// For more information: https://developers.google.com/identity/protocols/oauth2/scopes?hl=en#drive
@@ -56,28 +54,35 @@ class _HomeScreenState extends State<HomeScreen> {
   void _signOut() async => await GoogleDriveWrite.signOut();
 
   /// Create a JSON file
-  void _createJsonFile() async => await GoogleDriveWrite.createJsonFile(filename: filename, content: content);
+  void _createJsonFile() async => await GoogleDriveWrite.createJsonFile(
+      filename: filename, content: content);
 
   /// Create a folder without description
-  void _createFolder() async => await GoogleDriveWrite.createFolder(folderName: folderName);
+  void _createFolder() async =>
+      await GoogleDriveWrite.createFolder(folderName: folderName);
 
   /// Create a folder with description
   void _createFolderWithDescription() async =>
-      await GoogleDriveWrite.createFolder(folderName: folderName, description: description);
+      await GoogleDriveWrite.createFolder(
+          folderName: folderName, description: description);
 
   /// Updating an existing file
-  void _updateJsonFile() async => await GoogleDriveWrite.updateJsonFile(filename: filename, content: newContent);
+  void _updateJsonFile() async => await GoogleDriveWrite.updateJsonFile(
+      filename: filename, content: newContent);
 
   /// Create a JSON file in an existing folder
   void _createJsonFileInFolder() async =>
-      await GoogleDriveWrite.createJsonFileInFolder(folderName: folderName, filename: filename, content: content);
+      await GoogleDriveWrite.createJsonFileInFolder(
+          folderName: folderName, filename: filename, content: content);
 
   /// Download a file to: /storage/emulated/0/Android/data/com.YOUR_ORGANIZE.APP_NAME/files/downloads
-  void _downloadFile() async => GoogleDriveRead.downloadFile(filename: filename, apiKey: apiKey);
+  void _downloadFile() async =>
+      GoogleDriveRead.downloadFile(filename: filename, apiKey: apiKey);
 
   /// Read JSON file local
   void _readJsonFile() async {
-    Map jsonFileFromDrive = await GoogleDriveRead.readJsonFile(filename: filename, apiKey: apiKey);
+    Map jsonFileFromDrive =
+        await GoogleDriveRead.readJsonFile(filename: filename, apiKey: apiKey);
     log("JSON File: \n$jsonFileFromDrive\n");
   }
 

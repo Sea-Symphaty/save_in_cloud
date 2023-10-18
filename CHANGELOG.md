@@ -1,3 +1,7 @@
+## 1.0.0
+
+* Code formatted
+
 ## 0.0.4
 
 * Added LICENSE

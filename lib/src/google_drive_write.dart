@@ -7,9 +7,9 @@ import 'package:googleapis/drive/v3.dart';
 
 /// Class for create, update JSON file and create folder in Google Drive.
 class GoogleDriveWrite {
-
   /// The "DriveApi.driveFileScope" is the same as "https://www.googleapis.com/auth/drive.file"
-  static final GoogleSignIn _googleSignIn = GoogleSignIn.standard(scopes: [DriveApi.driveFileScope]);
+  static final GoogleSignIn _googleSignIn =
+      GoogleSignIn.standard(scopes: [DriveApi.driveFileScope]);
   static GoogleSignInAccount? _account;
 
   static Future<void> signOut() async {
@@ -29,36 +29,34 @@ class GoogleDriveWrite {
   }
 
   /// Create a new JSON file in Google Drive.
-  static Future<void> createJsonFile({required String filename, required Map content}) async {
+  static Future<void> createJsonFile(
+      {required String filename, required Map content}) async {
     await signIn();
     try {
       /// Creates an empty JSON file with the accessToken from the user.
       String createUrl = "https://www.googleapis.com/drive/v3/files";
-      Map fileData = {"name" : "$filename.json"};
+      Map fileData = {"name": "$filename.json"};
 
-      http.Response createResponse = await http.post(
-          Uri.parse(createUrl),
+      http.Response createResponse = await http.post(Uri.parse(createUrl),
           headers: {
-            "Content-Type" : "application/json; charset=UTF-8",
+            "Content-Type": "application/json; charset=UTF-8",
             "Authorization": "Bearer ${await _accessToken()}"
           },
-          body: json.encode(fileData)
-      );
+          body: json.encode(fileData));
 
       if (createResponse.statusCode == 200) {
         /// If the was file created successfully, the content will be added
         Map responseBody = json.decode(createResponse.body);
         String fileId = responseBody["id"];
-        String uploadUrl = "https://www.googleapis.com/upload/drive/v3/files/$fileId?uploadType=media";
+        String uploadUrl =
+            "https://www.googleapis.com/upload/drive/v3/files/$fileId?uploadType=media";
 
-        http.Response uploadResponse = await http.patch(
-            Uri.parse(uploadUrl),
+        http.Response uploadResponse = await http.patch(Uri.parse(uploadUrl),
             headers: {
-              "Content-Type" : "application/json; charset=UTF-8",
+              "Content-Type": "application/json; charset=UTF-8",
               "Authorization": "Bearer ${await _accessToken()}"
             },
-            body: json.encode(content)
-        );
+            body: json.encode(content));
 
         if (uploadResponse.statusCode == 200) {
           log("File created successfully.");
@@ -68,14 +66,14 @@ class GoogleDriveWrite {
       } else {
         log("Error while creating the empty file.");
       }
-
-    } on Exception catch(error) {
+    } on Exception catch (error) {
       log("Error in createJsonFile():\n$error\n");
     }
   }
 
   /// Create a new folder in Google Drive.
-  static Future<void> createFolder({required String folderName, String? description}) async {
+  static Future<void> createFolder(
+      {required String folderName, String? description}) async {
     try {
       await signIn();
 
@@ -85,12 +83,11 @@ class GoogleDriveWrite {
       File file = File(
           name: folderName,
           mimeType: "application/vnd.google-apps.folder",
-          description: description
-      );
+          description: description);
       await driveApi.files.create(file);
 
       log("Folder created successfully.");
-    } on Exception catch(error) {
+    } on Exception catch (error) {
       log("Error in createFolder(): $error");
     }
   }
@@ -108,12 +105,12 @@ class GoogleDriveWrite {
     Map<String, String> headers = await _account!.authHeaders;
     http.Response response = await http.get(
         Uri.parse("https://www.googleapis.com/drive/v3/files"),
-        headers: headers
-    );
+        headers: headers);
 
     if (response.statusCode == 200) {
       List filesList = json.decode(response.body)["files"];
       String fileId = "";
+
       /// If the data is found successfully, then it will search for the entered file and returns the id.
       for (Map value in filesList) {
         if (value["name"].split(".").first == filename) {
@@ -130,7 +127,8 @@ class GoogleDriveWrite {
   }
 
   /// Updates an existing JSON file.
-  static Future<void> updateJsonFile({required String filename, required Map content}) async {
+  static Future<void> updateJsonFile(
+      {required String filename, required Map content}) async {
     await signIn();
 
     String fileId = await _searchFileId(filename);
@@ -141,12 +139,10 @@ class GoogleDriveWrite {
     }
 
     http.Response updateFile = await http.patch(
-        Uri.parse("https://www.googleapis.com/upload/drive/v3/files/$fileId?uploadType=media"),
-        headers: {
-          "Authorization": "Bearer ${await _accessToken()}"
-        },
-        body: json.encode(content)
-    );
+        Uri.parse(
+            "https://www.googleapis.com/upload/drive/v3/files/$fileId?uploadType=media"),
+        headers: {"Authorization": "Bearer ${await _accessToken()}"},
+        body: json.encode(content));
 
     if (updateFile.statusCode == 200) {
       log("File updated successfully.");
@@ -157,7 +153,9 @@ class GoogleDriveWrite {
 
   /// Creates a new JSON file and moves it to an existing folder.
   static Future<void> createJsonFileInFolder(
-      {required String folderName, required String filename, required Map content}) async {
+      {required String folderName,
+      required String filename,
+      required Map content}) async {
     await signIn();
 
     String folderId = await _searchFileId(folderName);
@@ -165,25 +163,24 @@ class GoogleDriveWrite {
       log("Folder not found.");
       return;
     }
+
     /// Create a JSON file with the content and the accessToken.
     http.Response updateFile = await http.post(
         Uri.parse("https://www.googleapis.com/upload/drive/v3/files"),
         headers: {
-          "Content-Type" : "application/json; charset=UTF-8",
-          "Authorization" : "Bearer ${await _accessToken()}",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Authorization": "Bearer ${await _accessToken()}",
         },
-        body: json.encode(content)
-    );
+        body: json.encode(content));
 
     var fileId = json.decode(updateFile.body)["id"];
+
     /// The created file is moved to the existing folder.
     Map<String, String> authHeaders = await _account!.authHeaders;
     _AuthClient authClient = _AuthClient(authHeaders);
     DriveApi driveApi = DriveApi(authClient);
     File file = File(
-        name: "$filename.json",
-        mimeType: "application/json; charset=UTF-8"
-    );
+        name: "$filename.json", mimeType: "application/json; charset=UTF-8");
     await driveApi.files.update(file, fileId, addParents: folderId);
 
     log("File created in folder successfully.");
@@ -197,5 +194,6 @@ class _AuthClient extends http.BaseClient {
   _AuthClient(this._headers);
 
   @override
-  Future<http.StreamedResponse> send(http.BaseRequest request) => _client.send(request..headers.addAll(_headers));
+  Future<http.StreamedResponse> send(http.BaseRequest request) =>
+      _client.send(request..headers.addAll(_headers));
 }
