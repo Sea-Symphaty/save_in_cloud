@@ -1,2 +1,2 @@
-export "/Google_Drive/google_drive_read.dart";
-export '/Google_Drive/google_drive_write.dart';
+export 'src/google_drive_read.dart';
+export 'src/google_drive_write.dart';
