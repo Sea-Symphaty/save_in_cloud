@@ -1,3 +1,7 @@
+## 1.1.0
+
++ Added search function
+
 ## 1.0.0
 
 * Code formatted

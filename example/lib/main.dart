@@ -75,6 +75,16 @@ class _HomeScreenState extends State<HomeScreen> {
       await GoogleDriveWrite.createJsonFileInFolder(
           folderName: folderName, filename: filename, content: content);
 
+  /// Search for a file or a folder
+  void _searchFile() async {
+    Map map = await GoogleDriveRead.searchFile(filename);
+    if (map.isEmpty) {
+      log("No file was found.");
+    } else {
+      log("File was found.\n$map");
+    }
+  }
+
   /// Download a file to: /storage/emulated/0/Android/data/com.YOUR_ORGANIZE.APP_NAME/files/downloads
   void _downloadFile() async =>
       GoogleDriveRead.downloadFile(filename: filename, apiKey: apiKey);
@@ -123,6 +133,10 @@ class _HomeScreenState extends State<HomeScreen> {
             ElevatedButton(
               child: const Text("create JSON file in folder"),
               onPressed: () => _createJsonFileInFolder(),
+            ),
+            ElevatedButton(
+              child: const Text("search file or folder"),
+              onPressed: () => _searchFile(),
             ),
             ElevatedButton(
               child: const Text("download JSON file"),

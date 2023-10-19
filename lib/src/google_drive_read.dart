@@ -20,7 +20,9 @@ class GoogleDriveRead {
   }
 
   /// The searching method is for searching and extracting the information from the searched file.
-  static Future<Map> _searchFileId(String filename) async {
+  static Future<Map> searchFile(String filename) async {
+    await _signIn();
+
     /// The first thing to do is to create a list of files in Google Drive.
     /// The information of the data looks like this:
     /// {
@@ -60,7 +62,7 @@ class GoogleDriveRead {
       await _signIn();
 
       /// First, the information of the file is searched and added to the URL.
-      Map fileInfo = await _searchFileId(filename);
+      Map fileInfo = await searchFile(filename);
       String fileMimeType = fileInfo["mimeType"];
       String fileId = fileInfo["id"];
       String fileName = fileInfo["name"];
@@ -109,7 +111,7 @@ class GoogleDriveRead {
       await _signIn();
 
       /// First, the information of the file is searched and added to the URL.
-      Map fileInfo = await _searchFileId(filename);
+      Map fileInfo = await searchFile(filename);
       String fileMimeType = fileInfo["mimeType"];
       String fileId = fileInfo["id"];
       String url =
