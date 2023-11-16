@@ -8,7 +8,8 @@ environment:
   flutter: ">=1.17.0"
 
 dependencies:
-  dartdoc: ^6.3.0
+  html: ^0.15.4
+  dartdoc: ^7.0.2
   flutter:
     sdk: flutter
   google_sign_in: ^6.1.5

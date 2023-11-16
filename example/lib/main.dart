@@ -66,7 +66,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   /// Create a JSON file
   void _createJsonFile() async {
-    int? createJsonFileCode = await GoogleDriveWrite.createJsonFile(filename: filename, content: content);
+    int? createJsonFileCode = await GoogleDriveWrite.createJsonFile(
+        filename: filename, content: content);
 
     if (createJsonFileCode == 1) {
       log("User has not logged in", name: "_createJsonFile()");
@@ -81,7 +82,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   /// Create a folder without description
   void _createFolder() async {
-    bool createFolder = await GoogleDriveWrite.createFolder(folderName: folderName);
+    bool createFolder =
+        await GoogleDriveWrite.createFolder(folderName: folderName);
 
     if (createFolder) {
       log("Folder created successfully.", name: "_createFolder()");
@@ -92,10 +94,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
   /// Create a folder with description
   void _createFolderWithDescription() async {
-    bool createFolder = await GoogleDriveWrite.createFolder(folderName: folderName, description: description);
+    bool createFolder = await GoogleDriveWrite.createFolder(
+        folderName: folderName, description: description);
 
     if (createFolder) {
-      log("Folder created successfully.", name: "_createFolderWithDescription()");
+      log("Folder created successfully.",
+          name: "_createFolderWithDescription()");
     } else {
       log("The user hasn't logged in.", name: "_createFolderWithDescription()");
     }
@@ -103,7 +107,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   /// Updating an existing file
   void _updateJsonFile() async {
-    int? updateJsonFileCode = await GoogleDriveWrite.updateJsonFile(filename: filename, content: newContent);
+    int? updateJsonFileCode = await GoogleDriveWrite.updateJsonFile(
+        filename: filename, content: newContent);
 
     if (updateJsonFileCode == 1) {
       log("The user hasn't logged in.", name: "_updateJsonFile()");
@@ -124,8 +129,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   /// Create a JSON file in an existing folder
   void _createJsonFileInFolder() async {
-    int createJsonFileInFolderCode = await GoogleDriveWrite.createJsonFileInFolder(
-        folderName: folderName, filename: filename, content: content);
+    int createJsonFileInFolderCode =
+        await GoogleDriveWrite.createJsonFileInFolder(
+            folderName: folderName, filename: filename, content: content);
 
     if (createJsonFileInFolderCode == 1) {
       log("The user hasn't logged in.", name: "_createJsonFileInFolder()");
@@ -155,7 +161,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   /// Download a file to: /storage/emulated/0/Android/data/com.YOUR_ORGANIZE.APP_NAME/files/downloads
   void _downloadFile() async {
-    int downloadFileCode = await GoogleDriveRead.downloadFile(filename: filename, apiKey: apiKey);
+    int downloadFileCode =
+        await GoogleDriveRead.downloadFile(filename: filename, apiKey: apiKey);
 
     if (downloadFileCode == 1) {
       log("The user hasn't logged in.", name: "_downloadFile()");
@@ -168,7 +175,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   /// Read JSON file local
   void _readJsonFile() async {
-    Map? readJsonFileMap = await GoogleDriveRead.readJsonFile(filename: filename, apiKey: apiKey);
+    Map? readJsonFileMap =
+        await GoogleDriveRead.readJsonFile(filename: filename, apiKey: apiKey);
 
     if (readJsonFileMap == null) {
       log("The user hasn't logged in.", name: "_readJsonFile()");

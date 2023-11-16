@@ -7,7 +7,6 @@ import 'service.dart';
 
 /// Class for create, update JSON file and create folder in Google Drive.
 class GoogleDriveWrite {
-
   static Future<void> signOut() async {
     googleSignIn.disconnect();
     account = null;
@@ -26,9 +25,9 @@ class GoogleDriveWrite {
 
   /// Create a new JSON file in Google Drive.
   /// The output value is an INT so that the error can be determined more precisely when it occurs.
-  /// 
+  ///
   /// Error code:
-  /// 
+  ///
   /// * 0: File created successfully.
   /// * 1: The user hasn't logged in.
   /// * 2: Error while creating the empty file.
@@ -52,7 +51,8 @@ class GoogleDriveWrite {
         /// If the was file created successfully, the content will be added
         Map responseBody = json.decode(createResponse.body);
         String fileId = responseBody["id"];
-        String uploadUrl = "https://www.googleapis.com/upload/drive/v3/files/$fileId?uploadType=media";
+        String uploadUrl =
+            "https://www.googleapis.com/upload/drive/v3/files/$fileId?uploadType=media";
 
         http.Response uploadResponse = await http.patch(Uri.parse(uploadUrl),
             headers: {
@@ -66,12 +66,14 @@ class GoogleDriveWrite {
           return 0;
         } else {
           info(text: "Error uploading file.");
-          log(textFromHTML(output: uploadResponse.body), name: "Create JSON File");
+          log(textFromHTML(output: uploadResponse.body),
+              name: "Create JSON File");
           return 3;
         }
       } else {
         info(text: "Error while creating the empty file.");
-        log(textFromHTML(output: createResponse.body), name: "Create JSON File");
+        log(textFromHTML(output: createResponse.body),
+            name: "Create JSON File");
         return 2;
       }
     } else {
@@ -113,10 +115,8 @@ class GoogleDriveWrite {
     ///   "name": "file.json"
     /// }
     Map<String, String> headers = await account!.authHeaders;
-    http.Response response = await http.get(
-        Uri.parse(filesEndpoint),
-        headers: headers
-    );
+    http.Response response =
+        await http.get(Uri.parse(filesEndpoint), headers: headers);
 
     if (response.statusCode == 200) {
       List<dynamic> filesList = json.decode(response.body)["files"];
@@ -168,7 +168,8 @@ class GoogleDriveWrite {
       }
 
       http.Response updateFile = await http.patch(
-          Uri.parse("https://www.googleapis.com/upload/drive/v3/files/$fileId?uploadType=media"),
+          Uri.parse(
+              "https://www.googleapis.com/upload/drive/v3/files/$fileId?uploadType=media"),
           headers: {"Authorization": "Bearer ${await _accessToken()}"},
           body: json.encode(content));
 
@@ -198,7 +199,9 @@ class GoogleDriveWrite {
   /// * 1: The user hasn't logged in.
   /// * 2: Errors in connection with HTTP.
   static Future<int> createJsonFileInFolder(
-      {required String folderName, required String filename, required Map content}) async {
+      {required String folderName,
+      required String filename,
+      required Map content}) async {
     if (await signIn()) {
       String? folderId = await _searchFileId(folderName);
 
@@ -224,15 +227,17 @@ class GoogleDriveWrite {
       Map<String, String> authHeaders = await account!.authHeaders;
       _AuthClient authClient = _AuthClient(authHeaders);
       DriveApi driveApi = DriveApi(authClient);
-      File file = File(name: "$filename.json", mimeType: "application/json; charset=UTF-8");
+      File file = File(
+          name: "$filename.json", mimeType: "application/json; charset=UTF-8");
 
       await driveApi.files.update(file, fileId, addParents: folderId);
 
-      log("File created in folder successfully.", name: "Create JSON File in Folder");
+      log("File created in folder successfully.",
+          name: "Create JSON File in Folder");
       return 0;
     } else {
-    info(text: "The user hasn't logged in.");
-    return 1;
+      info(text: "The user hasn't logged in.");
+      return 1;
     }
   }
 }

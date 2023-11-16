@@ -3,6 +3,17 @@
 
 With this package you can read, download, create, edit and search JSON files from Google Drive. You can also create folders and save the files into them.
 
+## Table of Contents
+
+1. [Before use](#before-use)
+    1. [Project](#project)
+    2. [Activate API](#activate-api)
+    3. [OAuth 2.0](#oauth-20)
+    4. [API Key](#api-key)
+2. [Additional information](#additional-information)
+3. [Example](#example)
+4. [Version 2.0.0](#version-200)
+
 # Before use
 
 ### Project
@@ -68,15 +79,52 @@ String filename = "file";
 String apiKey = "YOUR_API_KEY";// todo: insert the API key here
 
 /// Create a JSON file
-void _createJsonFile() async => await GoogleDriveWrite.createJsonFile(filename: filename, content: content);
+void _createJsonFile() async {
+  int? createJsonFileCode = await GoogleDriveWrite.createJsonFile(filename: filename, content: content);
+
+  if (createJsonFileCode == 1) {
+    log("User has not logged in", name: "_createJsonFile()");
+  } else if (createJsonFileCode == 2) {
+    log("Error while creating the empty file.", name: "_createJsonFile()");
+  } else if (createJsonFileCode == 3) {
+    log("Error uploading file.", name: "_createJsonFile()");
+  } else {
+    log("File created successfully.", name: "_createJsonFile()");
+  }
+}
 
 /// Updating an existing file
-void _updateJsonFile() async => await GoogleDriveWrite.updateJsonFile(filename: filename, content: newContent);
+void _updateJsonFile() async {
+  int? updateJsonFileCode = await GoogleDriveWrite.updateJsonFile(filename: filename, content: newContent);
+
+  if (updateJsonFileCode == 1) {
+    log("The user hasn't logged in.", name: "_updateJsonFile()");
+  } else if (updateJsonFileCode == 2) {
+    log("Error in connection with HTTP.", name: "_updateJsonFile()");
+    log("https://developers.google.com/drive/api/guides/handle-errors?hl=en#status-codes",
+        name: "Error code guide");
+  } else if (updateJsonFileCode == 3) {
+    log("File was not found.", name: "_updateJsonFile()");
+  } else if (updateJsonFileCode == 4) {
+    log("File creation failed.", name: "_updateJsonFile()");
+    log("https://developers.google.com/drive/api/guides/handle-errors?hl=en#status-codes",
+        name: "Error code guide");
+  } else {
+    log("File updated successfully.", name: "_updateJsonFile()");
+  }
+}
 
 /// Read JSON file local
 void _readJsonFile() async {
-  Map jsonFileFromDrive = await GoogleDriveRead.readJsonFile(filename: filename, apiKey: apiKey);
-  log("JSON File: \n$jsonFileFromDrive\n");
+  Map? readJsonFileMap = await GoogleDriveRead.readJsonFile(filename: filename, apiKey: apiKey);
+
+  if (readJsonFileMap == null) {
+    log("The user hasn't logged in.", name: "_readJsonFile()");
+  } else if (readJsonFileMap.isEmpty) {
+    log("No file found.", name: "_readJsonFile()");
+  } else {
+    log("JSON File: \n$readJsonFileMap\n", name: "_readJsonFile()");
+  }
 }
 
 @override
@@ -107,3 +155,6 @@ Widget build(BuildContext context) {
   );
 }
 ```
+
+# Version 2.0.0
+In the latest version, the outputs are data types. Previously they were only void methods. The new data types are available in Example.

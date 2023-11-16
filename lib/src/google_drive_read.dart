@@ -7,7 +7,6 @@ import 'service.dart';
 
 /// Class for reading and downloading the JSON file in Google Drive.
 class GoogleDriveRead {
-
   static Future<bool> _signIn() async {
     account ??= await googleSignIn.signIn();
     return googleSignIn.isSignedIn();
@@ -16,7 +15,6 @@ class GoogleDriveRead {
   /// The searching method is for searching and extracting the information from the searched file.
   static Future<Map?> searchFile(String filename) async {
     if (await _signIn()) {
-
       /// The first thing to do is to create a list of files in Google Drive.
       /// The information of the data looks like this:
       /// {
@@ -26,10 +24,8 @@ class GoogleDriveRead {
       ///   "name": "file.json"
       /// }
       Map<String, String> headers = await account!.authHeaders;
-      http.Response response = await http.get(
-          Uri.parse(filesEndpoint),
-          headers: headers
-      );
+      http.Response response =
+          await http.get(Uri.parse(filesEndpoint), headers: headers);
 
       if (response.statusCode == 200) {
         List<dynamic> filesList = json.decode(response.body)["files"];
@@ -42,13 +38,13 @@ class GoogleDriveRead {
             break;
           }
         }
-        
+
         log("Search process successful", name: "Search file or folder");
         return fileInfo;
       } else {
         info(text: "Error searching file or folder.");
         log(response.body, name: "Search file or folder");
-        return {"search error" : response.body};
+        return {"search error": response.body};
       }
     } else {
       info(text: "The user hasn't logged in.");
@@ -67,7 +63,6 @@ class GoogleDriveRead {
   /// * 2: No file was found.
   static Future<int> downloadFile(
       {required String filename, required String apiKey}) async {
-
     /// First, the information of the file is searched and added to the URL.
     Map? fileInfo = await searchFile(filename);
     if (fileInfo == null) {
@@ -81,7 +76,7 @@ class GoogleDriveRead {
       String fileId = fileInfo["id"];
       String fileName = fileInfo["name"];
       String url =
-        "$filesEndpoint/$fileId?alt=media&mimeType=$fileMimeType&key=$apiKey HTTP/1.1";
+          "$filesEndpoint/$fileId?alt=media&mimeType=$fileMimeType&key=$apiKey HTTP/1.1";
       //todo test
 
       Map<String, String> authHeaders = await account!.authHeaders;
@@ -89,16 +84,20 @@ class GoogleDriveRead {
       http.Response response = await authClient.get(Uri.parse(url));
 
       /// If the content of the JSON file is available, the path for the file is created.
-      Directory? directory = (await getExternalStorageDirectories(type: StorageDirectory.downloads))?.first;
+      Directory? directory = (await getExternalStorageDirectories(
+              type: StorageDirectory.downloads))
+          ?.first;
       String localPath = directory!.path;
-      File localFile = File("$localPath/$fileName.${fileMimeType.split("/").last}");
+      File localFile =
+          File("$localPath/$fileName.${fileMimeType.split("/").last}");
 
       if (await localFile.exists()) {
         /// If the file already exists, then a number in brackets is added after the name.
         int version = 1;
         bool exists = true;
         while (exists) {
-          localFile = File("$localPath/$fileName ($version).${fileMimeType.split("/").last}");
+          localFile = File(
+              "$localPath/$fileName ($version).${fileMimeType.split("/").last}");
           version++;
           if (!(await localFile.exists())) {
             exists = false;
@@ -129,7 +128,7 @@ class GoogleDriveRead {
       String fileMimeType = fileInfo["mimeType"];
       String fileId = fileInfo["id"];
       String url =
-        "$filesEndpoint/$fileId?alt=media&mimeType=$fileMimeType&key=$apiKey HTTP/1.1";
+          "$filesEndpoint/$fileId?alt=media&mimeType=$fileMimeType&key=$apiKey HTTP/1.1";
 
       Map<String, String> authHeaders = await account!.authHeaders;
       _AuthClient authClient = _AuthClient(authHeaders);
