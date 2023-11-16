@@ -1,3 +1,7 @@
+## 2.0.0
+
++ all methods have been revised so that they no longer contain voids. The output is now a data type
+
 ## 1.1.0
 
 + Added search function

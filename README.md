@@ -1,9 +1,9 @@
 # Overview
 [![GitHub](https://img.shields.io/badge/GitHub-save_in_cloud-gre.svg?logo=github&color=2ea44f)](https://github.com/Sea-Symphaty/save_in_cloud) [![Pub](https://img.shields.io/pub/v/save_in_cloud.svg?logo=dart&color=2ea44f)](https://pub.dev/packages/save_in_cloud)
 
-With this package you can read, download, create and edit JSON files from Google Drive. You can also create folders and save the files into them.
+With this package you can read, download, create, edit and search JSON files from Google Drive. You can also create folders and save the files into them.
 
-# before use
+# Before use
 
 ### Project
 1. First log in or register at <https://console.cloud.google.com>.
