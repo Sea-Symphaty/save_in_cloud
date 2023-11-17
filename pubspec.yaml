@@ -1,6 +1,6 @@
 name: save_in_cloud
 description: This dart package allows to create, upload download and read JSON files from Google Drive.
-version: 2.0.0
+version: 2.0.1
 homepage: https://github.com/Sea-Symphaty/save_in_cloud
 
 environment:
@@ -8,14 +8,13 @@ environment:
   flutter: ">=1.17.0"
 
 dependencies:
-  html: ^0.15.4
-  dartdoc: ^7.0.2
   flutter:
     sdk: flutter
   google_sign_in: ^6.1.5
   googleapis: ^11.4.0
   http: ^1.1.0
   path_provider: ^2.1.1
+  html: ^0.15.4
 
 dev_dependencies:
   flutter_test:
